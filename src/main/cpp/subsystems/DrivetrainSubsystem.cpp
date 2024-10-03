@@ -7,7 +7,7 @@ using namespace frc;
 using namespace units;
 using namespace SwerveConstants::DrivetrainConstants;
 using namespace SC;
-using namespace pathplanner;
+// using namespace pathplanner;
 
 DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]) {
     if (NULL != swerve_config_array) {

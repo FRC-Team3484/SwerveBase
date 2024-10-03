@@ -13,7 +13,7 @@ WPI_IGNORE_DEPRECATED
 
 using namespace frc;
 using namespace units;
-// using namespace ctre::phoenix6;
+using namespace ctre::phoenix6;
 using namespace ctre;
 using namespace SC;
 using namespace SwerveConstants::DrivetrainConstants;
@@ -27,70 +27,71 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
             _drive_feed_forward{pid_struct.S, pid_struct.V, pid_struct.A}
         {
 
-    // configs::CurrentLimitsConfigs drive_motor_current_limit{};
-    // drive_motor_current_limit.SupplyCurrentThreshold = DRIVE_CURRENT_THRESHOLD;
-    // drive_motor_current_limit.SupplyCurrentLimit = DRIVE_CURRENT_LIMIT;
-    // drive_motor_current_limit.SupplyTimeThreshold = DRIVE_CURRENT_TIME;
-    // drive_motor_current_limit.SupplyCurrentLimitEnable = true;
+    configs::CurrentLimitsConfigs drive_motor_current_limit{};
+    drive_motor_current_limit.SupplyCurrentThreshold = DRIVE_CURRENT_THRESHOLD;
+    drive_motor_current_limit.SupplyCurrentLimit = DRIVE_CURRENT_LIMIT;
+    drive_motor_current_limit.SupplyTimeThreshold = DRIVE_CURRENT_TIME;
+    drive_motor_current_limit.SupplyCurrentLimitEnable = true;
 
-    // _drive_motor_config.CurrentLimits = drive_motor_current_limit;
+    _drive_motor_config.CurrentLimits = drive_motor_current_limit;
 
-    // _drive_motor.GetConfigurator().Apply(_drive_motor_config);
-    // ResetEncoder();
-    // SetCoastMode();
-
-    _drive_motor.ConfigFactoryDefault();
-    _drive_motor.ConfigSupplyCurrentLimit(_drive_currrent_limit);
-    _drive_motor.ConfigOpenloopRamp(0.25, 0);
-    _can_id = corner.CAN_ID;
+    _drive_motor.GetConfigurator().Apply(_drive_motor_config);
     ResetEncoder();
+    SetCoastMode();
+
+    // _drive_motor.ConfigFactoryDefault();
+    // _drive_motor.ConfigSupplyCurrentLimit(_drive_currrent_limit);
+    // _drive_motor.ConfigOpenloopRamp(0.25, 0);
+    // _can_id = corner.CAN_ID;
+    // ResetEncoder();
 
     // Change to Phoenix 5
-    // configs::CurrentLimitsConfigs steer_motor_current_limit{};
-    // steer_motor_current_limit.SupplyCurrentThreshold = STEER_CURRENT_THRESHOLD;
-    // steer_motor_current_limit.SupplyCurrentLimit = STEER_CURRENT_LIMIT;
-    // steer_motor_current_limit.SupplyTimeThreshold = STEER_CURRENT_TIME;
-    // steer_motor_current_limit.SupplyCurrentLimitEnable = true;
+    configs::CurrentLimitsConfigs steer_motor_current_limit{};
+    steer_motor_current_limit.SupplyCurrentThreshold = STEER_CURRENT_THRESHOLD;
+    steer_motor_current_limit.SupplyCurrentLimit = STEER_CURRENT_LIMIT;
+    steer_motor_current_limit.SupplyTimeThreshold = STEER_CURRENT_TIME;
+    steer_motor_current_limit.SupplyCurrentLimitEnable = true;
 
-    // configs::TalonFXConfiguration steer_motor_config{};
-    // steer_motor_config.CurrentLimits = steer_motor_current_limit; 7
-    // steer_motor_config.MotorOutput.Inverted = STEER_MOTOR_REVERSED;
-    // steer_motor_config.MotorOutput.NeutralMode = signals::NeutralModeValue::Brake;
+    configs::TalonFXConfiguration steer_motor_config{};
+    steer_motor_config.CurrentLimits = steer_motor_current_limit;
+    steer_motor_config.MotorOutput.Inverted = STEER_MOTOR_REVERSED;
+    steer_motor_config.MotorOutput.NeutralMode = signals::NeutralModeValue::Brake;
 
-    // _steer_motor.GetConfigurator().Apply(steer_motor_config);
-    _steer_motor.ConfigFactoryDefault();
-    _steer_motor.SetNeutralMode(motorcontrol::Brake);
-    _steer_motor.ConfigSupplyCurrentLimit(_steer_current_limit);
-    _steer_motor.SetInverted(_swerve_current_constants.Steer_Motor_Reversed);
+    _steer_motor.GetConfigurator().Apply(steer_motor_config);
 
-    _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_1_General_, 255);
-    _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_4_AinTempVbat_, 255);
-    _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_12_Feedback1_, 255);
-    _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_14_Turn_PIDF1_, 200);
+    // _steer_motor.ConfigFactoryDefault();
+    // _steer_motor.SetNeutralMode(motorcontrol::Brake);
+    // _steer_motor.ConfigSupplyCurrentLimit(_steer_current_limit);
+    // _steer_motor.SetInverted(_swerve_current_constants.Steer_Motor_Reversed);
 
-    _steer_encoder.ConfigFactoryDefault();
-    _steer_encoder.SetPositionToAbsolute();
-    _steer_encoder.ConfigAbsoluteSensorRange(sensors::AbsoluteSensorRange::Signed_PlusMinus180);
-    _steer_encoder.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
-    _steer_encoder.ConfigMagnetOffset(corner.EncoderOffset);
-    _steer_encoder.ConfigSensorDirection(_swerve_current_constants.Encoder_Reversed);
-    _steer_encoder.SetStatusFramePeriod(ctre::phoenix::sensors::CANCoderStatusFrame::CANCoderStatusFrame_SensorData, 20);
-    _steer_encoder.SetStatusFramePeriod(ctre::phoenix::sensors::CANCoderStatusFrame::CANCoderStatusFrame_VbatAndFaults, 200);
+    // _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_1_General_, 255);
+    // _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_4_AinTempVbat_, 255);
+    // _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_12_Feedback1_, 255);
+    // _steer_motor.SetStatusFramePeriod(ctre::phoenix::motorcontrol::StatusFrame::Status_14_Turn_PIDF1_, 200);
+
+    // _steer_encoder.ConfigFactoryDefault();
+    // _steer_encoder.SetPositionToAbsolute();
+    // _steer_encoder.ConfigAbsoluteSensorRange(sensors::AbsoluteSensorRange::Signed_PlusMinus180);
+    // _steer_encoder.ConfigSensorInitializationStrategy(SensorInitializationStrategy::BootToAbsolutePosition);
+    // _steer_encoder.ConfigMagnetOffset(corner.EncoderOffset);
+    // _steer_encoder.ConfigSensorDirection(_swerve_current_constants.Encoder_Reversed);
+    // _steer_encoder.SetStatusFramePeriod(ctre::phoenix::sensors::CANCoderStatusFrame::CANCoderStatusFrame_SensorData, 20);
+    // _steer_encoder.SetStatusFramePeriod(ctre::phoenix::sensors::CANCoderStatusFrame::CANCoderStatusFrame_VbatAndFaults, 200);
 
     // Change all the way to Cancoder
-    // configs::MagnetSensorConfigs encoder_magnet_config{};
-    // encoder_magnet_config.MagnetOffset = ENCODER_OFFSET[module_location] / 360.0;
-    // encoder_magnet_config.AbsoluteSensorRange = signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
-    // encoder_magnet_config.SensorDirection = ENCODER_REVERSED;
+    configs::MagnetSensorConfigs encoder_magnet_config{};
+    encoder_magnet_config.MagnetOffset = ENCODER_OFFSET[module_location] / 360.0;
+    encoder_magnet_config.AbsoluteSensorRange = signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf;
+    encoder_magnet_config.SensorDirection = ENCODER_REVERSED;
 
-    // configs::CANcoderConfiguration encoder_config{};
-    // encoder_config.MagnetSensor = encoder_magnet_config;
+    configs::CANcoderConfiguration encoder_config{};
+    encoder_config.MagnetSensor = encoder_magnet_config;
 
-    // _steer_encoder.GetConfigurator().Apply(encoder_config);
+    _steer_encoder.GetConfigurator().Apply(encoder_config);
 
-    _steer_pid_controller.EnableContinuousInput(-180_deg, 180_deg);
+    // _steer_pid_controller.EnableContinuousInput(-180_deg, 180_deg);
 
-    // SetDesiredState({0_mps, GetState().angle}, true);
+    SetDesiredState({0_mps, GetState().angle}, true);
 
     _drive_pid_controller.SetP(pid_struct.Kp);
     _drive_pid_controller.SetI(pid_struct.Ki);

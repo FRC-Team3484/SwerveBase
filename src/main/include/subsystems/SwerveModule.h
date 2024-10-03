@@ -3,8 +3,8 @@
 
 #include "Constants.h"
 
-// #include <ctre/phoenix6/TalonFX.hpp>
-// #include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/CANcoder.hpp>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/SimpleMotorFeedforward.h>
@@ -31,17 +31,17 @@ class SwerveModule {
         void SetBrakeMode();
 
     private:
-        // ctre::phoenix6::configs::TalonFXConfiguration _drive_motor_config{};
+        ctre::phoenix6::configs::TalonFXConfiguration _drive_motor_config{};
 
-        // ctre::phoenix6::hardware::TalonFX _drive_motor;
-        // ctre::phoenix6::hardware::TalonFX _steer_motor;
-        // ctre::phoenix6::hardware::CANcoder _steer_encoder;
+        ctre::phoenix6::hardware::TalonFX _drive_motor;
+        ctre::phoenix6::hardware::TalonFX _steer_motor;
+        ctre::phoenix6::hardware::CANcoder _steer_encoder;
         // Check for proper path declaration
         
         double _can_id;
-        ctre::phoenix::motorcontrol::can::WPI_TalonFX _drive_motor;
-        ctre::phoenix::motorcontrol::can::WPI_TalonFX _steer_motor;
-        ctre::phoenix::sensors::WPI_CANCoder _steer_encoder;
+        // ctre::phoenix::motorcontrol::can::WPI_TalonFX _drive_motor;
+        // ctre::phoenix::motorcontrol::can::WPI_TalonFX _steer_motor;
+        // ctre::phoenix::sensors::WPI_CANCoder _steer_encoder;
 
         // WPI_TalonFX _drive_motor;
         // WPI_TalonFX _steer_motor;

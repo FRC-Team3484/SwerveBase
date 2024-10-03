@@ -19,10 +19,10 @@
 #include <frc/kinematics/SwerveDriveOdometry.h>
 
 //Path Planner Paths
-#include <pathplanner/lib/auto/AutoBuilder.h>
-#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
-#include <pathplanner/lib/util/PIDConstants.h>
-#include <pathplanner/lib/util/ReplanningConfig.h>
+// #include <pathplanner/lib/auto/AutoBuilder.h>
+// #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
+// #include <pathplanner/lib/util/PIDConstants.h>
+// #include <pathplanner/lib/util/ReplanningConfig.h>
 #include <frc/DriverStation.h>
 
 class DrivetrainSubsystem : public frc2::SubsystemBase {
