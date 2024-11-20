@@ -11,13 +11,7 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 
-#include <wpi/deprecated.h>
 
-WPI_IGNORE_DEPRECATED
-
-#include "ctre/phoenix/sensors/WPI_CANCoder.h"
-#include "ctre/phoenix/motorcontrol/can/WPI_TalonFX.h"
-// #include "ctre/Phoenix.h"
 
 class SwerveModule {
     public:
@@ -31,36 +25,13 @@ class SwerveModule {
         void SetBrakeMode();
 
     private:
-        ctre::phoenix6::configs::TalonFXConfiguration _drive_motor_config{};
-
         ctre::phoenix6::hardware::TalonFX _drive_motor;
         ctre::phoenix6::hardware::TalonFX _steer_motor;
         ctre::phoenix6::hardware::CANcoder _steer_encoder;
-        // Check for proper path declaration
-        
-        double _can_id;
-        // ctre::phoenix::motorcontrol::can::WPI_TalonFX _drive_motor;
-        // ctre::phoenix::motorcontrol::can::WPI_TalonFX _steer_motor;
-        // ctre::phoenix::sensors::WPI_CANCoder _steer_encoder;
 
-        // WPI_TalonFX _drive_motor;
-        // WPI_TalonFX _steer_motor;
-        // WPI_CANCoder _steer_encoder;
-
-        SC::SC_SwerveCurrents _swerve_current_constants;
-
-        ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration _drive_currrent_limit{
-            _swerve_current_constants.Current_Limit_Enable,
-            _swerve_current_constants.Current_Limit_Drive,
-            _swerve_current_constants.Drive_Current_Threshold,
-            _swerve_current_constants.Drive_Current_Time
-        };
-        ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration _steer_current_limit{
-            _swerve_current_constants.Current_Limit_Enable,
-            _swerve_current_constants.Current_Limit_Steer,
-            _swerve_current_constants.Steer_Current_Threshold,
-            _swerve_current_constants.Steer_Current_Time
-        };
+        ctre::phoenix6::configs::TalonFXConfiguration _drive_motor_config{};
+        ctre::phoenix6::configs::TalonFXConfiguration _steer_motor_config{};
+        ctre::phoenix6::configs::CANcoderConfiguration _encoder_config{};
 
         frc::PIDController _drive_pid_controller{0, 0, 0};
         

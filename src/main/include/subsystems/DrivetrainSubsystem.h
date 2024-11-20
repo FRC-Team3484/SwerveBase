@@ -1,29 +1,22 @@
-#ifndef DRIVETRAIN_SUBSYSTEM_H
-#define DRIVETRAIN_SUBSYSTEM_H
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
-#include "Constants.h"
-#include "SwerveModule.h"
+#ifndef DRIVETRAINSUBSYSTEM_H
+#define DRIVETRAINSUBSYSTEM_H
+
+#include "subsystems/SwerveModule.h"
+
+#include <AHRS.h>
 
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 
-#include <AHRS.h>
-// #include <ctre/phoenix6/TalonFX.hpp>
-
+#include <wpi/array.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Rotation2d.h>
-#include <frc/kinematics/SwerveModuleState.h>
-#include <frc/kinematics/SwerveModulePosition.h>
-#include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
-
-//Path Planner Paths
-// #include <pathplanner/lib/auto/AutoBuilder.h>
-// #include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
-// #include <pathplanner/lib/util/PIDConstants.h>
-// #include <pathplanner/lib/util/ReplanningConfig.h>
-#include <frc/DriverStation.h>
 
 class DrivetrainSubsystem : public frc2::SubsystemBase {
     public:
@@ -57,7 +50,6 @@ class DrivetrainSubsystem : public frc2::SubsystemBase {
         };
 
     private:
-        // Check if can be placed in constants
         SwerveModule* _modules[4];
             
         AHRS* _gyro;

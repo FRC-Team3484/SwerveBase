@@ -1,13 +1,24 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 #include "subsystems/DrivetrainSubsystem.h"
 
-#include <frc/geometry/Translation2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+
+//Path Planner Paths
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
+#include <pathplanner/lib/util/PIDConstants.h>
+#include <pathplanner/lib/util/ReplanningConfig.h>
+#include <frc/DriverStation.h>
+
+using namespace SC;
+using namespace SwerveConstants::DrivetrainConstants;
 
 using namespace frc;
 using namespace units;
-using namespace SwerveConstants::DrivetrainConstants;
-using namespace SC;
-// using namespace pathplanner;
+using namespace pathplanner;
 
 DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]) {
     if (NULL != swerve_config_array) {
@@ -19,7 +30,8 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::RightPID);
             }
         }
-    AutoBuilder::configureHolonomic(
+
+        AutoBuilder::configureHolonomic(
         [this](){ return GetPose(); }, // Robot pose supplier
         [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
         [this](){ return GetChassisSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -28,7 +40,7 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
             PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             2.0_mps, // Max module speed, in m/s
-            0.5 * math::sqrt(DRIVETRAIN_WIDTH * DRIVETRAIN_WIDTH + DRIVETRAIN_LENGTH * DRIVETRAIN_LENGTH), // Drive base radius in meters. Distance from robot center to furthest module.
+            0.4318_m, // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         []() {
@@ -45,6 +57,7 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
             this // Reference to this subsystem to set requirements
         );
     }
+
     _gyro = new AHRS{SPI::Port::kMXP};
     _odometry = new SwerveDriveOdometry<4>{kinematics, GetHeading(), GetModulePositions()};
     SetBrakeMode();
@@ -57,7 +70,7 @@ void DrivetrainSubsystem::Periodic() {
         _odometry->Update(GetHeading(), GetModulePositions());
     }
 
-    if (frc::SmartDashboard::GetBoolean("Drivetrain Diagnostics", false)) {
+    if (SmartDashboard::GetBoolean("Drivetrain Diagnostics", false)) {
         SmartDashboard::PutNumber("FL Encoder", _modules[FL]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("FR Encoder", _modules[FR]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("BL Encoder", _modules[BL]->GetPosition().angle.Degrees().value());
@@ -98,6 +111,7 @@ Rotation2d DrivetrainSubsystem::GetHeading() {
 
 void DrivetrainSubsystem::SetHeading(degree_t heading) {
     ResetOdometry(Pose2d(_odometry->GetPose().Translation(), Rotation2d(heading)));
+    fmt::print("Reset Head!!!!!!\n");
 }
 
 degrees_per_second_t DrivetrainSubsystem::GetTurnRate() {

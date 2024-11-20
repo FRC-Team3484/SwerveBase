@@ -1,9 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "units/time.h"
-#define EN_TESTING
-
 #define DRIVE_ENABLED
 
 #include <units/voltage.h>
@@ -15,12 +12,16 @@
 #include <units/angular_acceleration.h>
 #include <frc/geometry/Pose2d.h>
 
-// #include <ctre/Phoenix.h>
-
 #include <FRC3484_Lib/utils/SC_ControllerMaps.h>
 #include <FRC3484_Lib/utils/SC_Datatypes.h>
 
 namespace SwerveConstants {
+    namespace AutonNames {
+        const std::string AUTON_NAMES[] = {
+            "Path1", "Path2", "Path3"
+        };
+    }
+
     namespace ControllerConstants {
         constexpr double DRIVER_RUMBLE_HIGH = 0.5;
         constexpr double DRIVER_RUMBLE_LOW = 0.2;
@@ -59,18 +60,17 @@ namespace SwerveConstants {
         constexpr units::inch_t DRIVETRAIN_LENGTH = 24_in;
         constexpr double DRIVE_GEAR_RATIO = 36000.0/5880.0;
         constexpr double STEER_GEAR_RATIO = 12.8;
-        constexpr int DRIVE_TICKS_PER_REVOLUTION = 2048;
-        constexpr int STEER_TICKS_PER_REVOLUTION = 2048;
         constexpr units::inch_t WHEEL_RADIUS = 2_in;
 
         constexpr units::feet_per_second_t MAX_WHEEL_SPEED = 8_fps;
         constexpr units::feet_per_second_squared_t MAX_WHEEL_ACCELERATION = 4_fps_sq;
 
+// Check For Autons
         namespace DrivePIDConstants {
-            static SC::SC_SwervePID LeftPID{2, 0, 0, 2.0715 * 1_V / 1_mps, 0.17977 * 1_V / 1_mps_sq, 0.77607_V};
-            static SC::SC_SwervePID RightPID{2, 0, 0, 2.0802 * 1_V / 1_mps, 0.30693 * 1_V / 1_mps_sq, 0.73235_V};
+            // Check SC_Datatypes for the struct
+            [[maybe_unused]] static SC::SC_SwervePID LeftPID{2, 0, 0, 2.0715 * 1_V / 1_mps, 0.17977 * 1_V / 1_mps_sq, 0.77607_V};
+            [[maybe_unused]] static SC::SC_SwervePID RightPID{2, 0, 0, 2.0802 * 1_V / 1_mps, 0.30693 * 1_V / 1_mps_sq, 0.73235_V};
         }
-
         namespace SteerPIDConstants {
             constexpr double Kp_Steer = 0.5;
             constexpr double Ki_Steer = 0.0;
@@ -84,6 +84,11 @@ namespace SwerveConstants {
         }
     }
 
+    namespace BrakeConstants {
+        constexpr auto DYNAMIC_BRAKE_SCALING = -0.02/1_in;
+        constexpr units::second_t BRAKE_DELAY = .5_s;
+    }
+
     namespace AutonDriveConstants {
         // How fast the robot can move in autons
         constexpr units::feet_per_second_t MAX_LINEAR_SPEED = 8_fps;
@@ -95,42 +100,48 @@ namespace SwerveConstants {
         constexpr units::degree_t ANGLE_TOLERANCE = 2_deg;
     }
 
-    namespace PathDrivePIDConstants {
-        constexpr double P = 5.0;
-        constexpr double I = 0.0;
-        constexpr double D = 0.0;
-    }
+        namespace PathDrivePIDConstants {
+            constexpr double P = 5.0;
+            constexpr double I = 0.0;
+            constexpr double D = 0.0;
+        }
 
-    namespace PathRotationPIDConstants {
-        constexpr double P = 2.0;
-        constexpr double I = 0.0;
-        constexpr double D = 0.0;
+        namespace PathRotationPIDConstants {
+            constexpr double P = 2.0;
+            constexpr double I = 0.0;
+            constexpr double D = 0.0;
+        }
     }
-}
 
 namespace UserInterface {
     namespace Driver {
         constexpr int DRIVER_CONTROLLER_PORT = 0;
         constexpr double DRIVER_JOYSTICK_DEADBAND = 0.02;
-
         // Motion
         constexpr int THROTTLE = XBOX_LS_Y;
         constexpr int STRAFE = XBOX_LS_X;
         constexpr int ROTATION = XBOX_RS_X;
-
         // Settings
         constexpr int RESET_HEADING = XBOX_BACK;
         constexpr int BRAKE = XBOX_X;
-        constexpr int ENABLE_BRAKE_MODE = XBOX_RB;
+        constexpr int BRAKE_MODE = XBOX_RB;
         constexpr int DISABLE_BRAKE_MODE = XBOX_LB;
         constexpr int LOW_SPEED = XBOX_LT;
 
-        // Ignore
-        constexpr int DRIVER_IGNORE = XBOX_Y;
-    }
+        // Override
+        constexpr int DRIVER_OVERRIDE = XBOX_Y;
 
-    namespace Operator {}
-    namespace Testing {}
+    }
+    namespace Operator {
+        constexpr int OPERATOR_CONTROLLER_PORT = 1;
+
+    }
+    namespace Testing {
+        constexpr int TESTING_OPEN_LOOP_LEFT = XBOX_LS_Y;
+        constexpr int TESTING_OPEN_LOOP_RIGHT = XBOX_RS_Y;
+        constexpr double TESTING_DEADBAND = 0.02;
+        constexpr int TESTING_CONTROLLER_PORT = 2;
+    }
 }
 
 #endif

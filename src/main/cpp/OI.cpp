@@ -19,10 +19,23 @@ double Driver_Interface::GetRotation() {return frc::ApplyDeadband(_driver_contro
 bool Driver_Interface::GetResetHeading() {return _driver_controller.GetRawButton(RESET_HEADING);}
 bool Driver_Interface::GetBrake() {return _driver_controller.GetRawButton(BRAKE);}
 bool Driver_Interface::GetBrakePressed() {return _driver_controller.GetRawButtonPressed(BRAKE);}
-
-bool Driver_Interface::GetSetBrakeMode() {return _driver_controller.GetRawButtonPressed(ENABLE_BRAKE_MODE);}
+bool Driver_Interface::GetSetBrakeMode() {return _driver_controller.GetRawButtonPressed(BRAKE_MODE);}
 bool Driver_Interface::GetDisableBrakeMode() {return _driver_controller.GetRawButtonPressed(DISABLE_BRAKE_MODE);}
 bool Driver_Interface::LowSpeed() {return _driver_controller.GetRawAxis(LOW_SPEED) > 0.5;}
 
-bool Driver_Interface::DriverOverrideIgnore() {return _driver_controller.GetRawButton(DRIVER_IGNORE);}
-void Driver_Interface::SetRumble(double Rumble) {_driver_controller.SetRumble(frc::GenericHID::kBothRumble, Rumble);}
+bool Driver_Interface::DriverOverride() {return _driver_controller.GetRawButton(DRIVER_OVERRIDE);}
+void Driver_Interface::SetRumble(double Rumble) {
+    _driver_controller.SetRumble(frc::GenericHID::kBothRumble, Rumble);
+}
+
+// ----------
+// Operator
+// ----------
+Operator_Interface::Operator_Interface(){}
+void Operator_Interface::SetRumble(double Rumble) {
+    _operator_controller.SetRumble(frc::GenericHID::kBothRumble, Rumble);
+}
+
+int Operator_Interface::RawPOV() {
+    return _operator_controller.GetPOV();
+}
