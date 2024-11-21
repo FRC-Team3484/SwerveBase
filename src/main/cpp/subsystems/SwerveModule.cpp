@@ -26,7 +26,7 @@ using namespace frc;
 SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct) 
         : _drive_motor(corner.CAN_ID),
         _steer_motor(corner.SteerMotorPort),
-         _steer_encoder(corner.EncoderPort),
+        _steer_encoder(corner.EncoderPort),
         _drive_feed_forward{pid_struct.S, pid_struct.V, pid_struct.A}
 {
     // Load motor configs
@@ -43,6 +43,7 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
     _drive_motor_config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.25;
     _drive_motor.GetConfigurator().Apply(_drive_motor_config);
     SetBrakeMode();
+    ResetEncoder();
 
     // Create and apply steer configs
     configs::CurrentLimitsConfigs steer_current_limit{};
@@ -62,7 +63,7 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
     //Create and apply encoder configs
     configs::MagnetSensorConfigs encoder_magnet_config{};
     encoder_magnet_config
-        .WithMagnetOffset(corner.EncoderOffset)
+        .WithMagnetOffset(degree_t{corner.EncoderOffset}.value() / 360.0)
         .WithSensorDirection(_swerve_current_constants.Encoder_Reversed)
         .WithAbsoluteSensorRange(signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf);
     

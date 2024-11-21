@@ -45,6 +45,4 @@ class SwerveModule {
         frc::SimpleMotorFeedforward<units::meters> _drive_feed_forward;
 };
 
-WPI_UNIGNORE_DEPRECATED
-
 #endif

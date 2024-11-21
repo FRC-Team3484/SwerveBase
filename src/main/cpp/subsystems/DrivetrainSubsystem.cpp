@@ -25,7 +25,6 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
         for (int i = 0; i < 4; i++) {
             if (FL == i || BL == i) {
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::LeftPID);
-
             } else {
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::RightPID);
             }
@@ -56,6 +55,8 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
             },
             this // Reference to this subsystem to set requirements
         );
+
+        SmartDashboard::PutBoolean("Drivetrain Diagnostics", false);
     }
 
     _gyro = new AHRS{SPI::Port::kMXP};

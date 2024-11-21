@@ -6,10 +6,11 @@
 #include <tuple>
 #include <algorithm>
 #include <stdexcept>
-#include "frc/PneumaticsModuleType.h"
-#include "units/time.h"
-#include "units/math.h"
+#include <frc/PneumaticsModuleType.h>
 
+#include <units/math.h>
+#include <units/time.h>
+#include <units/angle.h>
 #include <units/voltage.h>
 #include <units/length.h>
 #include <units/velocity.h>
@@ -61,7 +62,7 @@ namespace SC
 		int CAN_ID;
 		int SteerMotorPort;
 		int EncoderPort;
-		double EncoderOffset;
+		units::degree_t EncoderOffset;
 	} SC_SwerveConfigs;
 
 	// Amp Configurations

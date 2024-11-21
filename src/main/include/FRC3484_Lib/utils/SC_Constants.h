@@ -9,9 +9,6 @@
 
 namespace SC
 {
-	// 360 degrees (1 revolution) in radians. Useful for converting angluar movement to tangential movement.
-	static const units::angle::radian_t C_REVOLUTION_RADS = 360_deg;
-
 	/* General Constants */
 	#define C_DISABLED_CHANNEL	-1
 
