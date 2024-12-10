@@ -11,6 +11,7 @@
 
 #include "subsystems/DrivetrainSubsystem.h"
 #include "commands/teleop/TeleopDriveCommand.h"
+#include "FRC3484_Lib/components/SC_Photon.h"
 
 #include <frc/TimedRobot.h>
 #include "frc2/command/Commands.h"
@@ -46,9 +47,16 @@ class Robot : public frc::TimedRobot {
         Driver_Interface _oi_driver{};
         Operator_Interface _oi_operator{};
 
+        // Vision
+        #ifdef VISION_ENABLED
+        SC_Photon* _vision_ptr = new SC_Photon(VisionConstants::CAMERA_NAME, VisionConstants::APRIL_TAG_LAYOUT, VisionConstants::POSE_STRATEGY, VisionConstants::CAMERA_POSITION);
+        #else
+        SC_Photon* _vision_ptr = nullptr
+        #endif
+
         // Subsystems
         #ifdef DRIVE_ENABLED
-        DrivetrainSubsystem _drivetrain{SwerveConstants::DrivetrainConstants::SWERVE_CONFIGS_ARRAY};
+        DrivetrainSubsystem _drivetrain{SwerveConstants::DrivetrainConstants::SWERVE_CONFIGS_ARRAY, _vision_ptr};
         #endif
 
         AutonGenerator _auton_generator{&_drivetrain};

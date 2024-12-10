@@ -20,7 +20,9 @@ using namespace frc;
 using namespace units;
 using namespace pathplanner;
 
-DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]) {
+DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4], SC_Photon* vision)
+        : _vision{vision}
+{
     if (NULL != swerve_config_array) {
         for (int i = 0; i < 4; i++) {
             if (FL == i || BL == i) {
@@ -62,8 +64,6 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
     _gyro = new AHRS{SPI::Port::kMXP};
     _odometry = new SwerveDriveOdometry<4>{kinematics, GetHeading(), GetModulePositions()};
     SetBrakeMode();
-
-    frc::SmartDashboard::PutData("Field", &_field);
 }
 
 void DrivetrainSubsystem::Periodic() {
@@ -71,6 +71,8 @@ void DrivetrainSubsystem::Periodic() {
         fmt::print("Error: odometry accessed in Periodic before initialization");
     } else {
         _odometry->Update(GetHeading(), GetModulePositions());
+        if (_vision != NULL)
+            ResetOdometry(_vision->EstimatePose(GetPose()));
     }
 
     if (SmartDashboard::GetBoolean("Drivetrain Diagnostics", false)) {
@@ -80,8 +82,6 @@ void DrivetrainSubsystem::Periodic() {
         SmartDashboard::PutNumber("BR Encoder", _modules[BR]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("Gyro Heading", GetHeading().Degrees().value());
     }
-
-    _field.SetRobotPose(GetPose());
 }
 
 void DrivetrainSubsystem::Drive(meters_per_second_t x_speed, meters_per_second_t y_speed, radians_per_second_t rotation, bool open_loop) {

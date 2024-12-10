@@ -1,6 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#define VISION_ENABLED
 #define DRIVE_ENABLED
 
 #include <units/voltage.h>
@@ -10,10 +11,23 @@
 #include <units/angle.h>
 #include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
-#include <frc/geometry/Pose2d.h>
 
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Transform3d.h>
+#include <frc/apriltag/AprilTagFields.h>
+#include <frc/apriltag/AprilTagFieldLayout.h>
+
+#include <photon/PhotonPoseEstimator.h>
 #include <FRC3484_Lib/utils/SC_ControllerMaps.h>
 #include <FRC3484_Lib/utils/SC_Datatypes.h>
+
+namespace VisionConstants {
+    const frc::AprilTagFieldLayout APRIL_TAG_LAYOUT = frc::LoadAprilTagLayoutField(frc::AprilTagField::k2024Crescendo);
+    constexpr photon::PoseStrategy POSE_STRATEGY = photon::PoseStrategy::MULTI_TAG_PNP_ON_COPROCESSOR;
+
+    constexpr std::string_view CAMERA_NAME = "Camera 1";
+    const frc::Transform3d CAMERA_POSITION = frc::Transform3d{frc::Translation3d{12_in, 0_in, 12_in}, frc::Rotation3d{0_deg, -30_deg, 0_deg}};
+}
 
 namespace SwerveConstants {
     namespace AutonNames {

@@ -6,6 +6,7 @@
 #define DRIVETRAINSUBSYSTEM_H
 
 #include "subsystems/SwerveModule.h"
+#include "FRC3484_Lib/components/SC_Photon.h"
 
 #include <AHRS.h>
 
@@ -17,11 +18,10 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
-#include <frc/smartdashboard/Field2d.h>
 
 class DrivetrainSubsystem : public frc2::SubsystemBase {
     public:
-        DrivetrainSubsystem(SC::SC_SwerveConfigs swerve_config_array[4]);
+        DrivetrainSubsystem(SC::SC_SwerveConfigs swerve_config_array[4], SC_Photon* vision);
         void Periodic() override;
 
         void Drive(units::meters_per_second_t x_speed, units::meters_per_second_t y_speed, units::radians_per_second_t rotation, bool open_loop=false);
@@ -58,7 +58,7 @@ class DrivetrainSubsystem : public frc2::SubsystemBase {
 
         frc::SwerveDriveOdometry<4>* _odometry;
 
-        frc::Field2d _field;
+        SC_Photon* _vision;
 };
 
 #endif
