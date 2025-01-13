@@ -34,10 +34,11 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
 
     // Create and apply drive configs
     configs::CurrentLimitsConfigs drive_current_limit{};
-    drive_current_limit.SupplyCurrentLimitEnable = _swerve_current_constants.Current_Limit_Enable;
-    drive_current_limit.SupplyCurrentLimit = _swerve_current_constants.Current_Limit_Drive;
-    drive_current_limit.SupplyCurrentThreshold = _swerve_current_constants.Drive_Current_Threshold;
-    drive_current_limit.SupplyTimeThreshold = _swerve_current_constants.Drive_Current_Time;
+    drive_current_limit
+        .WithSupplyCurrentLimitEnable(_swerve_current_constants.Current_Limit_Enable)
+        .WithSupplyCurrentLimit(_swerve_current_constants.Current_Limit_Drive)
+        .WithSupplyCurrentThreshold(_swerve_current_constants.Drive_Current_Threshold)
+        .WithSupplyTimeThreshold(_swerve_current_constants.Drive_Current_Time);
 
     _drive_motor_config.CurrentLimits = drive_current_limit;
     _drive_motor_config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.25;

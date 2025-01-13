@@ -24,13 +24,18 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
         : _vision{vision}
 {
     if (NULL != swerve_config_array) {
+        wpi::array<frc::Rotation2d, 4> headings{wpi::empty_array};
         for (int i = 0; i < 4; i++) {
             if (FL == i || BL == i) {
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::LeftPID);
             } else {
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::RightPID);
             }
+            headings[i] = _modules[i]->GetPosition().angle;
         }
+
+
+        kinematics.ResetHeadings(headings);
 
         AutoBuilder::configureHolonomic(
         [this](){ return GetPose(); }, // Robot pose supplier
@@ -83,7 +88,7 @@ void DrivetrainSubsystem::Periodic() {
         SmartDashboard::PutNumber("BL Encoder", _modules[BL]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("BR Encoder", _modules[BR]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("Gyro Heading", GetHeading().Degrees().value());
-        SmartDashboard::PutNumber("Odometry X", GetPose().X().value());
+SmartDashboard::PutNumber("Odometry X", GetPose().X().value());
         SmartDashboard::PutNumber("Odometry Y", GetPose().Y().value());
     }
 
