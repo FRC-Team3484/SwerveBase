@@ -83,6 +83,8 @@ void DrivetrainSubsystem::Periodic() {
         SmartDashboard::PutNumber("BL Encoder", _modules[BL]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("BR Encoder", _modules[BR]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("Gyro Heading", GetHeading().Degrees().value());
+        SmartDashboard::PutNumber("Odometry X", GetPose().X().value());
+        SmartDashboard::PutNumber("Odometry Y", GetPose().Y().value());
     }
 
     _field.SetRobotPose(GetPose());
@@ -120,7 +122,7 @@ Rotation2d DrivetrainSubsystem::GetHeading() {
 
 void DrivetrainSubsystem::SetHeading(degree_t heading) {
     ResetOdometry(Pose2d(_odometry->GetPose().Translation(), Rotation2d(heading)));
-    fmt::print("Reset Head!!!!!!\n");
+    //fmt::print("Reset Head!!!!!!\n");
 }
 
 degrees_per_second_t DrivetrainSubsystem::GetTurnRate() {
@@ -149,9 +151,9 @@ void DrivetrainSubsystem::ResetOdometry(Pose2d pose) {
         fmt::print("Error: gyro accessed in ZeroHeading before initialization");
         
     } else {
-        fmt::print("Resetting Pose: X ({0}), Y({1}), Rotation({2})", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
-        _gyro_offset = pose.Rotation().Degrees();
-        _gyro->ZeroYaw();
+        //fmt::print("Resetting Pose: X ({0}), Y({1}), Rotation({2})", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
+        _gyro_offset = pose.Rotation().Degrees() + degree_t{_gyro->GetAngle()};
+        //_gyro->ZeroYaw();
         _odometry->ResetPosition(GetHeading(), GetModulePositions(), pose);
     }
 }

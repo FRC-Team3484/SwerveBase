@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define VISION_ENABLED
+// #define VISION_ENABLED
 #define DRIVE_ENABLED
 
 #include <units/voltage.h>
