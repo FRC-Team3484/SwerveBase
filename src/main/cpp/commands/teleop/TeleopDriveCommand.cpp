@@ -33,10 +33,6 @@ void TeleopDriveCommand::Execute() {
 
     // Logic with buttons
     if (_oi != NULL) {
-        if (_oi->GetBrakePressed()) {
-            // Get Initial Values of the Wheels
-            _initial_positions = _drivetrain->GetModulePositions();
-        }
 
         if (_oi->GetResetHeading()) {
             _drivetrain->SetHeading();

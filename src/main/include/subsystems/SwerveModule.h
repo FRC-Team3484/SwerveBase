@@ -11,8 +11,6 @@
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 
-
-
 class SwerveModule {
     public:
         SwerveModule(SC::SC_SwerveConfigs corner, SC::SC_SwervePID pid_struct);

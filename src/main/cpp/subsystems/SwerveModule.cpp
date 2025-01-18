@@ -34,13 +34,14 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
 
     // Create and apply drive configs
     configs::CurrentLimitsConfigs drive_current_limit{};
-    drive_current_limit.SupplyCurrentLimitEnable = _swerve_current_constants.Current_Limit_Enable;
-    drive_current_limit.SupplyCurrentLimit = _swerve_current_constants.Current_Limit_Drive;
-    drive_current_limit.SupplyCurrentThreshold = _swerve_current_constants.Drive_Current_Threshold;
-    drive_current_limit.SupplyTimeThreshold = _swerve_current_constants.Drive_Current_Time;
+    drive_current_limit
+        .WithSupplyCurrentLimitEnable(_swerve_current_constants.Current_Limit_Enable)
+        .WithSupplyCurrentLimit(_swerve_current_constants.Current_Limit_Drive)
+        .WithSupplyCurrentLowerLimit(_swerve_current_constants.Drive_Current_Threshold)
+        .WithSupplyCurrentLowerTime(_swerve_current_constants.Drive_Current_Time);
 
     _drive_motor_config.CurrentLimits = drive_current_limit;
-    _drive_motor_config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.25;
+    _drive_motor_config.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = 0.25_s;
     _drive_motor.GetConfigurator().Apply(_drive_motor_config);
     SetBrakeMode();
     ResetEncoder();
@@ -50,8 +51,8 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
     steer_current_limit
         .WithSupplyCurrentLimitEnable(_swerve_current_constants.Current_Limit_Enable)
         .WithSupplyCurrentLimit(_swerve_current_constants.Current_Limit_Steer)
-        .WithSupplyCurrentThreshold(_swerve_current_constants.Steer_Current_Threshold)
-        .WithSupplyTimeThreshold(_swerve_current_constants.Steer_Current_Time);
+        .WithSupplyCurrentLowerLimit(_swerve_current_constants.Steer_Current_Threshold)
+        .WithSupplyCurrentLowerTime(_swerve_current_constants.Steer_Current_Time);
 
 
     _steer_motor_config.CurrentLimits = steer_current_limit;
@@ -63,9 +64,9 @@ SwerveModule::SwerveModule(SC_SwerveConfigs corner, SC_SwervePID pid_struct)
     //Create and apply encoder configs
     configs::MagnetSensorConfigs encoder_magnet_config{};
     encoder_magnet_config
-        .WithMagnetOffset(degree_t{corner.EncoderOffset}.value() / 360.0)
+        .WithMagnetOffset(corner.EncoderOffset)
         .WithSensorDirection(_swerve_current_constants.Encoder_Reversed)
-        .WithAbsoluteSensorRange(signals::AbsoluteSensorRangeValue::Signed_PlusMinusHalf);
+        .WithAbsoluteSensorDiscontinuityPoint(180_deg);
     
     _encoder_config.MagnetSensor = encoder_magnet_config;
     _steer_encoder.GetConfigurator().Apply(_encoder_config);

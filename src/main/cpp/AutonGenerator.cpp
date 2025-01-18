@@ -49,10 +49,6 @@ frc2::CommandPtr AutonGenerator::_GetCommand(std::string command_name) {
 }
 
 frc2::CommandPtr AutonGenerator::GetAutonomousCommand() {
-    if (_auton_chooser_path_1.GetSelected() != "None") {
-        _drivetrain->ResetOdometry(PathPlannerAuto::getStartingPoseFromAutoFile(_auton_chooser_path_1.GetSelected()));
-    }
-
     return frc2::cmd::Sequence(
         _GetCommand(_auton_chooser_initial.GetSelected()),
         _GetCommand(_auton_chooser_path_1.GetSelected()),

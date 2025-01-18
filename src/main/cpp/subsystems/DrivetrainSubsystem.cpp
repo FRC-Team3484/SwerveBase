@@ -8,9 +8,7 @@
 
 //Path Planner Paths
 #include <pathplanner/lib/auto/AutoBuilder.h>
-#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
-#include <pathplanner/lib/util/PIDConstants.h>
-#include <pathplanner/lib/util/ReplanningConfig.h>
+#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
 #include <frc/DriverStation.h>
 
 using namespace SC;
@@ -20,28 +18,35 @@ using namespace frc;
 using namespace units;
 using namespace pathplanner;
 
-DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]) {
+DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4], SC_Photon* vision)
+        : _vision{vision}
+{
     if (NULL != swerve_config_array) {
+        wpi::array<frc::Rotation2d, 4> headings{wpi::empty_array};
         for (int i = 0; i < 4; i++) {
             if (FL == i || BL == i) {
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::LeftPID);
             } else {
                 _modules[i] = new SwerveModule(swerve_config_array[i], DrivePIDConstants::RightPID);
             }
+            headings[i] = _modules[i]->GetPosition().angle;
         }
 
-        AutoBuilder::configureHolonomic(
+
+        kinematics.ResetHeadings(headings);
+
+        RobotConfig config = RobotConfig::fromGUISettings();
+
+        AutoBuilder::configure(
         [this](){ return GetPose(); }, // Robot pose supplier
         [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
         [this](){ return GetChassisSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         [this](frc::ChassisSpeeds speeds){ DriveRobotcentric(speeds); }, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+        std::make_shared<PPHolonomicDriveController>(
             PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            2.0_mps, // Max module speed, in m/s
-            0.4318_m, // Drive base radius in meters. Distance from robot center to furthest module.
-            ReplanningConfig() // Default path replanning config. See the API for the options here
+            PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
         ),
+        config,
         []() {
             // Boolean supplier that controls when the path will be mirrored for the red alliance
             // This will flip the path being followed to the red side of the field.
@@ -59,7 +64,7 @@ DrivetrainSubsystem::DrivetrainSubsystem(SC_SwerveConfigs swerve_config_array[4]
         SmartDashboard::PutBoolean("Drivetrain Diagnostics", false);
     }
 
-    _gyro = new AHRS{SPI::Port::kMXP};
+    _gyro = new studica::AHRS{studica::AHRS::NavXComType::kMXP_SPI};
     _odometry = new SwerveDriveOdometry<4>{kinematics, GetHeading(), GetModulePositions()};
     SetBrakeMode();
 
@@ -71,6 +76,8 @@ void DrivetrainSubsystem::Periodic() {
         fmt::print("Error: odometry accessed in Periodic before initialization");
     } else {
         _odometry->Update(GetHeading(), GetModulePositions());
+        if (_vision != NULL)
+            ResetOdometry(_vision->EstimatePose(GetPose()));
     }
 
     if (SmartDashboard::GetBoolean("Drivetrain Diagnostics", false)) {
@@ -79,6 +86,8 @@ void DrivetrainSubsystem::Periodic() {
         SmartDashboard::PutNumber("BL Encoder", _modules[BL]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("BR Encoder", _modules[BR]->GetPosition().angle.Degrees().value());
         SmartDashboard::PutNumber("Gyro Heading", GetHeading().Degrees().value());
+SmartDashboard::PutNumber("Odometry X", GetPose().X().value());
+        SmartDashboard::PutNumber("Odometry Y", GetPose().Y().value());
     }
 
     _field.SetRobotPose(GetPose());
@@ -116,7 +125,7 @@ Rotation2d DrivetrainSubsystem::GetHeading() {
 
 void DrivetrainSubsystem::SetHeading(degree_t heading) {
     ResetOdometry(Pose2d(_odometry->GetPose().Translation(), Rotation2d(heading)));
-    fmt::print("Reset Head!!!!!!\n");
+    //fmt::print("Reset Head!!!!!!\n");
 }
 
 degrees_per_second_t DrivetrainSubsystem::GetTurnRate() {
@@ -145,9 +154,9 @@ void DrivetrainSubsystem::ResetOdometry(Pose2d pose) {
         fmt::print("Error: gyro accessed in ZeroHeading before initialization");
         
     } else {
-        fmt::print("Resetting Pose: X ({0}), Y({1}), Rotation({2})", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
-        _gyro_offset = pose.Rotation().Degrees();
-        _gyro->ZeroYaw();
+        //fmt::print("Resetting Pose: X ({0}), Y({1}), Rotation({2})", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
+        _gyro_offset = pose.Rotation().Degrees() + degree_t{_gyro->GetAngle()};
+        //_gyro->ZeroYaw();
         _odometry->ResetPosition(GetHeading(), GetModulePositions(), pose);
     }
 }

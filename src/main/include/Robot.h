@@ -7,10 +7,12 @@
 
 #include "OI.h"
 #include "Constants.h"
+#include "Config.h"
 #include "AutonGenerator.h"
 
 #include "subsystems/DrivetrainSubsystem.h"
 #include "commands/teleop/TeleopDriveCommand.h"
+#include "FRC3484_Lib/components/SC_Photon.h"
 
 #include <frc/TimedRobot.h>
 #include "frc2/command/Commands.h"
@@ -19,7 +21,7 @@
 
 class Robot : public frc::TimedRobot {
     public:
-        void RobotInit() override;
+        Robot();
         void RobotPeriodic() override;
         void DisabledInit() override;
         void DisabledPeriodic() override;
@@ -46,12 +48,20 @@ class Robot : public frc::TimedRobot {
         Driver_Interface _oi_driver{};
         Operator_Interface _oi_operator{};
 
-        // Subsystems
-        #ifdef DRIVE_ENABLED
-        DrivetrainSubsystem _drivetrain{SwerveConstants::DrivetrainConstants::SWERVE_CONFIGS_ARRAY};
+        // Vision
+        #ifdef VISION_ENABLED
+        SC_Photon* _vision_ptr = new SC_Photon(VisionConstants::CAMERA_NAME, VisionConstants::APRIL_TAG_LAYOUT, VisionConstants::POSE_STRATEGY, VisionConstants::CAMERA_POSITION);
+        #else
+        SC_Photon* _vision_ptr = nullptr;
         #endif
 
+        // Subsystems
+        #ifdef DRIVETRAIN_ENABLED
+        DrivetrainSubsystem _drivetrain{SwerveConstants::DrivetrainConstants::SWERVE_CONFIGS_ARRAY, _vision_ptr};
         AutonGenerator _auton_generator{&_drivetrain};
+        #endif
+
+        
 
         // Command Groups
         frc2::CommandPtr _drive_state_commands = frc2::cmd::Parallel(

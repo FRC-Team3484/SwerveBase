@@ -6,8 +6,9 @@
 #define DRIVETRAINSUBSYSTEM_H
 
 #include "subsystems/SwerveModule.h"
+#include "FRC3484_Lib/components/SC_Photon.h"
 
-#include <AHRS.h>
+#include <studica/AHRS.h>
 
 #include <units/angle.h>
 #include <units/angular_velocity.h>
@@ -21,7 +22,7 @@
 
 class DrivetrainSubsystem : public frc2::SubsystemBase {
     public:
-        DrivetrainSubsystem(SC::SC_SwerveConfigs swerve_config_array[4]);
+        DrivetrainSubsystem(SC::SC_SwerveConfigs swerve_config_array[4], SC_Photon* vision);
         void Periodic() override;
 
         void Drive(units::meters_per_second_t x_speed, units::meters_per_second_t y_speed, units::radians_per_second_t rotation, bool open_loop=false);
@@ -53,12 +54,14 @@ class DrivetrainSubsystem : public frc2::SubsystemBase {
     private:
         SwerveModule* _modules[4];
             
-        AHRS* _gyro;
+        studica::AHRS* _gyro;
         units::degree_t _gyro_offset = 0_deg;
 
         frc::SwerveDriveOdometry<4>* _odometry;
 
         frc::Field2d _field;
+
+        SC_Photon* _vision;
 };
 
 #endif
