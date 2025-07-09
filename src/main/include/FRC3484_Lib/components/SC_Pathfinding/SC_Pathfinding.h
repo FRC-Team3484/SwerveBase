@@ -9,6 +9,7 @@
 
 #include <pathplanner/lib/auto/AutoBuilder.h>
 
+#include <FRC3484_Lib/components/SC_Pathfinding/PathfindingConstants.h>
 #include <FRC3484_Lib/components/SC_Pathfinding/FinalAlignmentCommand.h>
 #include <subsystems/DrivetrainSubsystem.h>
 
@@ -105,7 +106,7 @@ class SC_Pathfinding {
          * 
          * @return A command that creates a path to go to the target pose
          */
-        frc2::CommandPtr GetPathFindCommand(frc::Pose2d target, units::inch_t distance, bool defer);
+        frc2::CommandPtr GetPathfindCommand(frc::Pose2d target, units::inch_t distance, bool defer);
 
         /**
          * Returns a command that creates a path to go to the target pose
@@ -117,7 +118,7 @@ class SC_Pathfinding {
          * 
          * @return A command that creates a path to go to the target pose
          */
-        frc2::CommandPtr GetPathFindCommand(frc::Pose2d target, units::inch_t distance);
+        frc2::CommandPtr GetPathfindCommand(frc::Pose2d target, units::inch_t distance);
 
     private:
         DrivetrainSubsystem *_drivetrain_subsystem;

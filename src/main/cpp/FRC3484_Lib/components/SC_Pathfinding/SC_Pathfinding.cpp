@@ -1,5 +1,7 @@
 #include "FRC3484_Lib/components/SC_Pathfinding/SC_Pathfinding.h"
 
+using namespace PathfindingConstants;
+
 SC_Pathfinding::SC_Pathfinding(DrivetrainSubsystem *drivetrain_subsystem, std::function<frc::Pose2d()> pose_supplier, frc::AprilTagFieldLayout april_tag_layout) 
     : _drivetrain_subsystem{drivetrain_subsystem}, _pose_supplier{pose_supplier}, _april_tag_layout{april_tag_layout} {}
 
@@ -51,18 +53,18 @@ frc2::CommandPtr SC_Pathfinding::GetNearPoseCommand(frc::Pose2d target, units::i
     });
 }
 
-frc2::CommandPtr SC_Pathfinding::GetPathFindCommand(frc::Pose2d target, units::inch_t distance, bool defer) {
+frc2::CommandPtr SC_Pathfinding::GetPathfindCommand(frc::Pose2d target, units::inch_t distance, bool defer) {
     if (defer) {
-        return frc2::cmd::Defer([this, target, distance]() {return GetPathFindCommand(target, distance);}, {_drivetrain_subsystem});
+        return frc2::cmd::Defer([this, target, distance]() {return GetPathfindCommand(target, distance);}, {_drivetrain_subsystem});
     } else {
-        return GetPathFindCommand(target, distance);
+        return GetPathfindCommand(target, distance);
     }
 }
 
-frc2::CommandPtr SC_Pathfinding::GetPathFindCommand(frc::Pose2d target, units::inch_t distance) {
+frc2::CommandPtr SC_Pathfinding::GetPathfindCommand(frc::Pose2d target, units::inch_t distance) {
     pathplanner::PathConstraints constraints = pathplanner::PathConstraints(
-        3.0_mps, 4.0_mps_sq,
-        540_deg_per_s, 720_deg_per_s_sq
+        MAX_VELOCITY, MAX_ACCELERATION,
+        MAX_ANGULAR_VELOCITY, MAX_ANGULAR_ACCELERATION
     );
 
     frc2::CommandPtr pathfindingCommand = pathplanner::AutoBuilder::pathfindToPose(
