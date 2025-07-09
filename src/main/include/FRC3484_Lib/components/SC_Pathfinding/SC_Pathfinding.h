@@ -9,6 +9,9 @@
 
 #include <pathplanner/lib/auto/AutoBuilder.h>
 
+#include <FRC3484_Lib/components/SC_Pathfinding/FinalAlignmentCommand.h>
+#include <subsystems/DrivetrainSubsystem.h>
+
 class SC_Pathfinding {
     public:
         /**
@@ -18,7 +21,7 @@ class SC_Pathfinding {
          * @param pose_supplier A lambda to the drivetrain function that returns the current pose of the robot
          * @param april_tag_layout The layout of the april tags
          */
-        SC_Pathfinding(frc2::Subsystem *drivetrain_subsystem, std::function<frc::Pose2d()> pose_supplier, frc::AprilTagFieldLayout april_tag_layout);
+        SC_Pathfinding(DrivetrainSubsystem *drivetrain_subsystem, std::function<frc::Pose2d()> pose_supplier, frc::AprilTagFieldLayout april_tag_layout);
 
         /**
          * Returns the poses of the april tags by ID
@@ -64,11 +67,20 @@ class SC_Pathfinding {
          * Returns a command that aligns the robot to the given pose
          * 
          * @param target The pose to align to
+         * 
+         * @return A command that aligns the robot to the given pose
+         */
+        frc2::CommandPtr GetFinalAlignmentCommand(frc::Pose2d target);
+
+        /**
+         * Returns a command that aligns the robot to the given pose
+         * 
+         * @param target The pose to align to
          * @param defer Whether to defer the command
          * 
          * @return A command that aligns the robot to the given pose
          */
-        frc2::CommandPtr GetFinalAlignmentCommand(frc::Pose2d target, bool defer = false);
+        frc2::CommandPtr GetFinalAlignmentCommand(frc::Pose2d target, bool defer);
 
         /**
          * Returns a command that does nothing and waits until the robot is within a distance, then exits
@@ -93,10 +105,22 @@ class SC_Pathfinding {
          * 
          * @return A command that creates a path to go to the target pose
          */
-        frc2::CommandPtr GetPathFindCommand(frc::Pose2d target, units::inch_t distance = 0_in, bool defer = false);
+        frc2::CommandPtr GetPathFindCommand(frc::Pose2d target, units::inch_t distance, bool defer);
+
+        /**
+         * Returns a command that creates a path to go to the target pose
+         * If a distance is provided, it should use a GetFinalAlignmentCommand 
+         *  to align to the target once we're within that distance
+         * 
+         * @param target The pose to go to
+         * @param distance The distance before aligning
+         * 
+         * @return A command that creates a path to go to the target pose
+         */
+        frc2::CommandPtr GetPathFindCommand(frc::Pose2d target, units::inch_t distance);
 
     private:
-        frc2::Subsystem *_drivetrain_subsystem;
+        DrivetrainSubsystem *_drivetrain_subsystem;
         std::function<frc::Pose2d()> _pose_supplier;
         frc::AprilTagFieldLayout _april_tag_layout;
 };
