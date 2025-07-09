@@ -1,6 +1,6 @@
-#include "FRC3484_Lib/components/SC_Pathfinding/FinalAlignmentCommand.h"
 #include <units/math.h>
 
+#include "FRC3484_Lib/components/SC_Pathfinding/FinalAlignmentCommand.h"
 #include "FRC3484_Lib/components/SC_Pathfinding/PathfindingConstants.h"
 
 using namespace PathfindingConstants;

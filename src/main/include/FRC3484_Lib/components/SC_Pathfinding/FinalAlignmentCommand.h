@@ -13,6 +13,14 @@ class FinalAlignmentCommand
     :public frc2::CommandHelper<frc2::Command, FinalAlignmentCommand> {
 
     public:
+        /**
+         * A command that uses the drivetrain to do a precise alignment to a target pose
+         * Used by SC_Pathfinding to align the robot to the target pose,
+         *  commonly after using pathfinding to roughly reach a pose
+         * 
+         * @param drivetrain_subsystem A pointer to the drivetrain subsystem
+         * @param target_pose The target pose
+         */
         explicit FinalAlignmentCommand(DrivetrainSubsystem* drivetrain_subsystem, frc::Pose2d target_pose);
 
         void Initialize() override;
