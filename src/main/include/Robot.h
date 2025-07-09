@@ -55,20 +55,11 @@ class Robot : public frc::TimedRobot {
         SC_Photon* _vision_ptr = nullptr
         #endif
 
-        // Vision
-        #ifdef VISION_ENABLED
-        SC_Photon* _vision_ptr = new SC_Photon(VisionConstants::CAMERA_NAME, VisionConstants::APRIL_TAG_LAYOUT, VisionConstants::POSE_STRATEGY, VisionConstants::CAMERA_POSITION);
-        #else
-        SC_Photon* _vision_ptr = nullptr;
-        #endif
-
         // Subsystems
         #ifdef DRIVETRAIN_ENABLED
         DrivetrainSubsystem _drivetrain{SwerveConstants::DrivetrainConstants::SWERVE_CONFIGS_ARRAY, _vision_ptr};
         AutonGenerator _auton_generator{&_drivetrain};
         #endif
-
-        
 
         // Command Groups
         frc2::CommandPtr _drive_state_commands = frc2::cmd::Parallel(
