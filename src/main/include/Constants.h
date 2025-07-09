@@ -1,9 +1,23 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include <frc/apriltag/AprilTagFieldLayout.h>
-#include <photon/PhotonPoseEstimator.h>
+#define VISION_ENABLED
+#define DRIVE_ENABLED
 
+#include <units/voltage.h>
+#include <units/length.h>
+#include <units/velocity.h>
+#include <units/acceleration.h>
+#include <units/angle.h>
+#include <units/angular_velocity.h>
+#include <units/angular_acceleration.h>
+
+#include <frc/geometry/Pose2d.h>
+#include <frc/geometry/Transform3d.h>
+#include <frc/apriltag/AprilTagFields.h>
+#include <frc/apriltag/AprilTagFieldLayout.h>
+
+#include <photon/PhotonPoseEstimator.h>
 #include <FRC3484_Lib/utils/SC_ControllerMaps.h>
 #include <FRC3484_Lib/utils/SC_Datatypes.h>
 
