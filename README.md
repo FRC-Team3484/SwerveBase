@@ -6,7 +6,7 @@
 
   **This repository holds 3484's base robot code for the 2026 Rebuilt season**
 
-  **[Branches](https://github.com/FRC-Team3484/SwerveBase/branches)** ● **[Documentation](#documentation)**
+  **[Branches](https://github.com/FRC-Team3484/SwerveBase/branches)** ● **[Documentation](https://github.com/FRC-Team3484/docs)**
 
 </div>
 
@@ -25,17 +25,4 @@ Now, open the WPILib VSCode that you just installed and navigate to the `SwerveB
 Source control and WPILib tools and functionality should both be avaliable in this directory
 
 ## Documentation
-This repo contains several pieces of documentation which may be useful throughout the season or in the future. Some of these are repo specific and some are from [FRC-Team3484/programming-lists](https://github.com/FRC-Team3484/programming-lists)
-
-- **[Repository Good Practices](docs/Repository_Good_Practices.md)**
-  - [Branches](docs/Repository_Good_Practices.md#branches)
-  - [Merging Branches](docs/Repository_Good_Practices.md#merging-branches)
-- **[Code Style Guide](docs/Code_Style_Guide.md)**
-  - [Cases](docs/Code_Style_Guide.md#cases)
-  - [Formatting](docs/Code_Style_Guide.md#formatting)
-  - [File Names](docs/Code_Style_Guide.md#file-names)
-  - [Other](docs/Code_Style_Guide.md#other)
-- **[Commenting Guide](docs/Commenting_Guide.md)**
-- **[How to Use Git](docs/How_to_Use_Git.md)**
-- **[C++ Learning](docs/C++_Learning.md)**
-- **[Useful Documentation](docs/Useful_Documentation.md)**
+Up to date documentation is avaliable at [FRC-Team3484/docs](https://github.com/FRC-Team3484/docs)
