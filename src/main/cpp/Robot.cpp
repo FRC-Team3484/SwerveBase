@@ -23,7 +23,13 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::DisabledExit() {}
 
-void Robot::AutonomousInit() {}
+void Robot::AutonomousInit() {
+    _auton_command = _auton_generator->GetAutonomousCommand();
+
+    if (_auton_command) {
+        _auton_command->Schedule();
+    }
+}
 
 void Robot::AutonomousPeriodic() {}
 

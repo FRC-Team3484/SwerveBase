@@ -1,3 +1,6 @@
+#ifndef SC_PATHFINDING_H
+#define SC_PATHFINDING_H
+
 #include <vector>
 
 #include <units/length.h>
@@ -125,3 +128,5 @@ class SC_Pathfinding {
         std::function<frc::Pose2d()> _pose_supplier;
         frc::AprilTagFieldLayout _april_tag_layout;
 };
+
+#endif

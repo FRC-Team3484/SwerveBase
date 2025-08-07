@@ -8,8 +8,11 @@
 #include <frc2/command/Commands.h>
 
 #include "FRC3484_Lib/components/SC_Photon.h"
+#include "FRC3484_Lib/components/SC_Pathfinding/SC_Pathfinding.h"
+
 #include "subsystems/DrivetrainSubsystem.h"
 #include "commands/teleop/TeleopDriveCommand.h"
+#include "AutonGenerator.h"
 #include "OI.h"
 #include "Constants.h"
 #include "Config.h"
@@ -50,6 +53,18 @@ class Robot : public frc::TimedRobot {
         DrivetrainSubsystem* _drivetrain = nullptr;
         #endif
 
+        #ifdef DRIVETRAIN_ENABLED
+        SC_Pathfinding* _pathfinding = new SC_Pathfinding(_drivetrain, [this](){return _drivetrain->GetPose();}, VisionConstants::APRIL_TAG_LAYOUT);
+        #else
+        SC_Pathfinding* _pathfinding = nullptr;
+        #endif
+
+        #if defined (DRIVETRAIN_ENABLED)
+        AutonGenerator* _auton_generator = new AutonGenerator(_drivetrain, _pathfinding);
+        #else
+        AutonGenerator* _auton_generator = nullptr;
+        #endif
+
         // Command Groups
         frc2::CommandPtr _drive_state_commands = frc2::cmd::Parallel(
             #if defined DRIVETRAIN_ENABLED
@@ -57,6 +72,9 @@ class Robot : public frc::TimedRobot {
             #endif
             frc2::cmd::None()
         );
+
+        // Autons
+        std::optional<frc2::CommandPtr> _auton_command;
 
         // State Machines
         enum driver_states {
